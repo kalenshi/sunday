@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+    container_name: api
+
+    volumes:
+      - ./:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+  db:
+    image: mysql:8
+    container_name: mysql-db
+    volumes:
+      - dbData:/var/lib/mysql
+    ports:
+      - "3305:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=%HT*hfklsnb&&
+      - MYSQL_USER=dbadmin
+      - MYSQL_PASSWORD=airflow
+      - MYSQL_DATABASE=sakila
+      - MYSQL_PORT=3306
+    restart: always
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+  rdCache:
+    image: redis
+    container_name: sunday_caching
+    restart: unless-stopped
+    volumes:
+      - cacheData:/data
+    ports:
+      - "6378:6379"
+    environment:
+      - LOG_LEVEL=info
+volumes:
+  dbData:
+  cacheData:

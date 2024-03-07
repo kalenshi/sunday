@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.core.cache import cache
 from drf_yasg import openapi
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -79,12 +80,17 @@ class PaymentList(APIView):
 				return Response(
 					{"error": f"{str(e)}"}, status=status.HTTP_404_NOT_FOUND
 				)
-
+		paginator = self.pagination_class()
 		payments = Payment.objects.select_related(
 			"customer", "staff", "rental"
 		).filter(**filters).order_by("payment_id")
-		paginator = self.pagination_class()
-		result = paginator.paginate_queryset(payments, request)
+		# At this point the query has not yet hit the database
+		query_string = payments.query
+		# check the cache
+		if cache.has_key(query_string):
+			result = paginator.paginate_queryset(cache.get(query_string), request)
+		else:
+			result = paginator.paginate_queryset(payments, request)
+			cache.set(query_string, result, timeout=24 * 60 * 60)
 		serializer = self.serializer_class(result, many=True)
-
 		return paginator.get_paginated_response(serializer.data)
