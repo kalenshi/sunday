@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
 	"rest_framework",
 	"rest_framework.authtoken",
 	"drf_yasg",
+	"django_redis",
 	"core",
 	"api",
 ]
@@ -78,14 +80,32 @@ WSGI_APPLICATION = 'sunday.wsgi.application'
 
 DATABASES = {
 	'default': {
-		'ENGINE': 'django.db.backends.mysql',
-		'NAME': "sakila",
-		'USER': "josh",
-		'PASSWORD': "airflow",
-		'HOST': "192.168.2.34"
+		"ENGINE": "dj_db_conn_pool.backends.mysql",
+		"NAME": "sakila",
+		"USER": "josh",
+		"PASSWORD": "airflow",
+		"HOST": "192.168.2.34",
+		"POOL_OPTIONS": {
+			"MAX_OVERFLOW": 10,
+			"POOL_SIZE": 10,
+			"RECYCLE": 24 * 60 * 60,
+			"USE_THREADLOCAL": True,
+		},
 	}
 }
 
+CACHES = {
+	"default": {
+		"BACKEND": "django_redis.cache.RedisCache",
+		"LOCATION": "redis://sunday_caching:6379/1",
+		"OPTIONS": {
+			"CLIENT_CLASS": "django_redis.client.DefaultClient",
+		}
+	}
+}
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
