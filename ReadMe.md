@@ -18,55 +18,16 @@
     Implements authentication and authorization mechanisms to secure API endpoints and control access to resources.
     Testing: Includes comprehensive unit tests and integration tests to ensure the reliability and correctness of the API endpoints.
     Docker Support: Provides Docker configuration for easy deployment and scaling of the application in different environments.
-
-## Requirements
-
-    asgiref==3.7.2
-    async-timeout==4.0.3
-    backports.zoneinfo==0.2.1;python_version<"3.9"
-    colorama==0.4.6
-    coverage==7.4.3
-    Django==4.2.10
-    django-db-connection-pool==1.2.4
-    django-pytest==0.2.0
-    django-redis==5.4.0
-    djangorestframework==3.14.0
-    drf-yasg==1.21.7
-    exceptiongroup==1.2.0
-    flake8==7.0.0
-    greenlet==3.0.3
-    inflection==0.5.1
-    iniconfig==2.0.0
-    mccabe==0.7.0
-    mysqlclient==2.2.4
-    packaging==23.2
-    pluggy==1.4.0
-    pycodestyle==2.11.1
-    pyflakes==3.2.0
-    pytest==8.0.2
-    pytz==2024.1
-    PyYAML==6.0.1
-    redis==5.0.2
-    SQLAlchemy==2.0.28
-    sqlparams==6.0.1
-    sqlparse==0.4.4
-    tomli==2.0.1
-    typing_extensions==4.10.0
-    tzdata==2024.1
-    uritemplate==4.1.1
+     python -Xutf8 manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission --indent 2 --database local > dump.json
 
 ## Installation
 
-        Clone the repository:
-    
-        bash
-    
-    git clone <repository_url>
-    
-    Install dependencies:
-    
-    bash
-    
-    pip install -r requirements.txt
-    
-    Set up MySQL database:
+    `>> ### First time `
+    1. git clone https://github.com/kalenshi/sunday.git
+    2. navigate into the sunday project folder
+    3. docker compose up --build
+    4. docker compose exec app sh -c "python manage.py loaddata --format json dump.json"
+    5. navigate to localhost:8000
+    6. happy codding
+    ## otherwise
+    docker compose up 
