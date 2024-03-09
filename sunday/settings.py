@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -40,8 +41,8 @@ INSTALLED_APPS = [
 	"rest_framework.authtoken",
 	"drf_yasg",
 	"django_redis",
-	"core",
 	"api",
+	"users",
 ]
 
 MIDDLEWARE = [
@@ -58,9 +59,8 @@ ROOT_URLCONF = 'sunday.urls'
 
 TEMPLATES = [
 	{
-		'BACKEND': 'django.template.backends.django.DjangoTemplates',
-		'DIRS': [BASE_DIR / 'templates']
-		,
+		"BACKEND": "django.template.backends.django.DjangoTemplates",
+		"DIRS": [BASE_DIR / "templates"],
 		'APP_DIRS': True,
 		'OPTIONS': {
 			'context_processors': [
@@ -78,29 +78,34 @@ WSGI_APPLICATION = 'sunday.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-	'default': {
-		"ENGINE": "dj_db_conn_pool.backends.mysql",
-		"NAME": "sakila",
-		"USER": "josh",
-		"PASSWORD": "airflow",
-		"HOST": "192.168.2.34",
-		"POOL_OPTIONS": {
-			"MAX_OVERFLOW": 10,
-			"POOL_SIZE": 10,
-			"RECYCLE": 24 * 60 * 60,
-			"USE_THREADLOCAL": True,
-		},
+if "test" in sys.argv:
+	DATABASES = {
+		"default": {
+			"ENGINE": "django.db.backends.sqlite3",
+			"NAME": BASE_DIR / 'db.sqlite'
+		}
 	}
-}
+else:
+	DATABASES = {
+		'default': {
+			"ENGINE": "dj_db_conn_pool.backends.mysql",
+			"NAME": os.environ.get("MYSQL_DATABASE"),
+			"USER": os.environ.get("MYSQL_USER"),
+			"PASSWORD": os.environ.get("MYSQL_USER_PASS"),
+			"HOST": os.environ.get("MYSQL_HOST"),
+			"POOL_OPTIONS": {
+				"MAX_OVERFLOW": 10,
+				"POOL_SIZE": 10,
+				"RECYCLE": 24 * 60 * 60,
+				"USE_THREADLOCAL": True,
+			},
+		}
+	}
 
 CACHES = {
 	"default": {
-		"BACKEND": "django_redis.cache.RedisCache",
-		"LOCATION": "redis://sunday_caching:6379/1",
-		"OPTIONS": {
-			"CLIENT_CLASS": "django_redis.client.DefaultClient",
-		}
+		"BACKEND": "django.core.cache.backends.redis.RedisCache",
+		"LOCATION": "redis://sunday-caching:6379/1",
 	}
 }
 
@@ -149,3 +154,14 @@ REST_FRAMEWORK = {
 	"DEFAULT_PAGINATION_CLASS": "api.payment.payment_paginator.PaymentPaginator",
 	"PAGE_SIZE": 100
 }
+
+# EMAIL_HOST = config('EMAIL_HOST', default='localhost')
+# EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
+# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+# EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+# EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# SERVER_EMAIL = EMAIL_HOST_USER
+# EMAIL_SUBJECT_PREFIX = 'bing'
+
+AUTH_USER_MODEL = 'users.User'

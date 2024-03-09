@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from django.core.cache import cache
@@ -81,16 +82,21 @@ class PaymentList(APIView):
 					{"error": f"{str(e)}"}, status=status.HTTP_404_NOT_FOUND
 				)
 		paginator = self.pagination_class()
-		payments = Payment.objects.select_related(
-			"customer", "staff", "rental"
-		).filter(**filters).order_by("payment_id")
+		if filters:
+			payments = Payment.objects.select_related(
+				"customer", "staff", "rental"
+			).filter(**filters).order_by("payment_id")
+		else:
+			payments = Payment.objects.select_related(
+				"customer", "staff", "rental"
+			).all().order_by("payment_id")
 		# At this point the query has not yet hit the database
-		query_string = payments.query
+		query_string = f"payment:{json.dumps(filters)}"
 		# check the cache
-		if cache.has_key(query_string):
+		if cache.get(query_string):
 			result = paginator.paginate_queryset(cache.get(query_string), request)
 		else:
 			result = paginator.paginate_queryset(payments, request)
-			cache.set(query_string, result, timeout=24 * 60 * 60)
+			cache.set(query_string, result, timeout=5 * 60)
 		serializer = self.serializer_class(result, many=True)
 		return paginator.get_paginated_response(serializer.data)
