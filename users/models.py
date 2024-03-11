@@ -79,7 +79,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 	def __str__(self):
 		"""String representation of the user model"""
-		return f"{self.pk} {self.email}"
+		return f" {self.email}"
 
 	class Meta:
 		app_label = "users"

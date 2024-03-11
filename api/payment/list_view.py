@@ -6,16 +6,17 @@ from drf_yasg import openapi
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from drf_yasg.utils import swagger_auto_schema
 
 from api.models import Payment
-from api.payment.payment_paginator import PaymentPaginator
+
 from api.payment.serializer import PaymentSerializer
+from api.utils.pagination import PaymentPaginator
 
 
 class PaymentList(APIView):
-	# permission_classes = [IsAuthenticated, ]
+	permission_classes = [IsAuthenticatedOrReadOnly, ]
 	serializer_class = PaymentSerializer
 	pagination_class = PaymentPaginator
 
