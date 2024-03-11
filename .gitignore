@@ -6,3 +6,4 @@ venv/
 .vscode/
 .idea/
 htmlcov/
+db.sqlite3
