@@ -39,6 +39,7 @@ INSTALLED_APPS = [
 	'django.contrib.staticfiles',
 	"rest_framework",
 	"rest_framework.authtoken",
+	'rest_framework_simplejwt',
 	"drf_yasg",
 	"django_redis",
 	"api",
@@ -152,7 +153,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
 	"DATE_INPUT_FORMATS": ["%d-%m-%Y"],
 	"DEFAULT_PAGINATION_CLASS": "api.utils.pagination.BasePagination",
-	"PAGE_SIZE": 100
+	"PAGE_SIZE": 100,
+	"DEFAULT_AUTHENTICATION_CLASSES": (
+		"rest_framework_simplejwt.authentication.JWTAuthentication",
+	),
 }
 
 # EMAIL_HOST = config('EMAIL_HOST', default='localhost')
