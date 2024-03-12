@@ -11,6 +11,6 @@ app_name = 'api'
 urlpatterns = [
 	path('payments/', PaymentList.as_view(), name='payment-list'),
 	path('customers/', CustomersList.as_view(), name='customer-list'),
-	path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-	path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+	path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+	path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
