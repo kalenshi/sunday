@@ -7,5 +7,5 @@ class Category(models.Model):
 	last_update = models.DateTimeField()
 
 	class Meta:
-		app_label = 'api'
+		app_label = "api"
 		db_table = "category"

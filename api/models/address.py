@@ -15,3 +15,4 @@ class Address(models.Model):
 	class Meta:
 		app_label = "api"
 		db_table = "address"
+		managed = True

@@ -80,28 +80,27 @@ WSGI_APPLICATION = 'sunday.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 if "test" in sys.argv:
-	DATABASES = {
-		"default": {
-			"ENGINE": "django.db.backends.sqlite3",
-			"NAME": BASE_DIR / 'db.sqlite'
-		}
-	}
+	USER = os.environ.get("MYSQL_ROOT_USER")
+	PASSWORD = os.environ.get("MYSQL_ROOT_PASSWORD")
 else:
-	DATABASES = {
-		'default': {
-			"ENGINE": "dj_db_conn_pool.backends.mysql",
-			"NAME": os.environ.get("MYSQL_DATABASE"),
-			"USER": os.environ.get("MYSQL_USER"),
-			"PASSWORD": os.environ.get("MYSQL_USER_PASS"),
-			"HOST": os.environ.get("MYSQL_HOST"),
-			"POOL_OPTIONS": {
-				"MAX_OVERFLOW": 10,
-				"POOL_SIZE": 10,
-				"RECYCLE": 24 * 60 * 60,
-				"USE_THREADLOCAL": True,
-			},
-		}
+	USER = os.environ.get("MYSQL_USER")
+	PASSWORD = os.environ.get("MYSQL_USER_PASSWORD")
+
+DATABASES = {
+	'default': {
+		"ENGINE": "dj_db_conn_pool.backends.mysql",
+		"NAME": os.environ.get("MYSQL_DATABASE"),
+		"USER": USER,
+		"PASSWORD": PASSWORD,
+		"HOST": os.environ.get("MYSQL_HOST"),
+		"POOL_OPTIONS": {
+			"MAX_OVERFLOW": 10,
+			"POOL_SIZE": 10,
+			"RECYCLE": 24 * 60 * 60,
+			"USE_THREADLOCAL": True,
+		},
 	}
+}
 
 CACHES = {
 	"default": {

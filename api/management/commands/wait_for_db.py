@@ -9,6 +9,7 @@ class Command(BaseCommand):
 	"""
 	Command for waiting for mysql to load up before applying migrations
 	"""
+
 	def handle(self, *args, **options):
 		connected = False
 		while not connected:
@@ -19,5 +20,6 @@ class Command(BaseCommand):
 				self.stdout.write(
 					self.style.ERROR("Error connecting to. Sleeping for 1 second ...")
 				)
+				self.stdout.write(self.style.SUCCESS(str(e)))
 				time.sleep(1)
 		self.stdout.write(self.style.SUCCESS("DB Ready for connections ..."))

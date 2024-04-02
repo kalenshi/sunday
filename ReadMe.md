@@ -26,8 +26,22 @@
     1. git clone https://github.com/kalenshi/sunday.git
     2. navigate into the sunday project folder
     3. docker compose up --build
-    4. docker compose exec app sh -c "python manage.py loaddata --format json dump.json"
+    4. docker compose exec app sh -c "python manage.py loaddata --format json dbDump.json"
     5. navigate to localhost:8000
     6. happy codding
     ## otherwise
     docker compose up 
+    Side Note:
+        If you encounter this Error `ModuleNotFoundError: No module named 'pkg_resources'
+        Run pip install --upgrade setuptools
+
+
+## Running tests
+***
+One of the ways to run unittests is to run the command 
+> ` docker compose exec -it app bash -c "./run_test.sh"`
+Another way is to execute to container with the app and run the following commands
+> `docker container exec -it sunday-app /bin/bash`
+Then run the command 
+> `./run_test.sh`
+From the command line

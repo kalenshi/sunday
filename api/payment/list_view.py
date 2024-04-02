@@ -67,10 +67,10 @@ class PaymentList(APIView):
 		req_params = request.query_params
 		if req_params:
 			try:
-				filters["payment_id__exact"] = request.query_params.get("payment_id")
-				filters["customer_id__exact"] = request.query_params.get("customer_id")
-				filters["staff_id__exact"] = request.query_params.get("staff_id")
-				filters["amount__gte"] = request.query_params.get("amount")
+				filters["payment_id__exact"] = request.query_params.get("payment_id", )
+				filters["customer_id__exact"] = request.query_params.get("customer_id", )
+				filters["staff_id__exact"] = request.query_params.get("staff_id", )
+				filters["amount__gte"] = request.query_params.get("amount", )
 				if "payment_date" in req_params and req_params["payment_date"] is not None:
 					filters["payment_date__date__exact"] = datetime.strptime(
 						req_params["payment_date"], "%Y-%m-%d"
@@ -94,8 +94,8 @@ class PaymentList(APIView):
 		# At this point the query has not yet hit the database
 		query_string = f"payment:{json.dumps(filters)}"
 		# check the cache
-		if cache.get(query_string):
-			result = paginator.paginate_queryset(cache.get(query_string), request)
+		if cache.get(query_string, ):
+			result = paginator.paginate_queryset(cache.get(query_string, ), request)
 		else:
 			result = paginator.paginate_queryset(payments, request)
 			cache.set(query_string, result, timeout=5 * 60)
