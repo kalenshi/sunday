@@ -6,7 +6,9 @@ ENV PYTHONDONTWRITEBYTECODE 1
 RUN mkdir /app
 WORKDIR /app
 COPY requirements.txt requirements.txt
+COPY requirements.dev.txt requirements.dev.txt
 
+ARG DEV=false
 RUN apt-get update && \
     apt-get install -y git && \
     git init && \
@@ -16,7 +18,11 @@ RUN apt-get update && \
     apt-get install -y libxml2-dev libxslt1-dev build-essential python3-lxml zlib1g-dev && \
     apt-get install -y default-mysql-client default-libmysqlclient-dev && \
     pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt &&\
+    if [ !$DEV ]; \
+        then pip install -r requirements.dev.txt ; \
+    fi && rm -rf /temp
+
 
 
 COPY . .

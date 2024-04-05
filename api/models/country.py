@@ -9,3 +9,11 @@ class Country(models.Model):
 	class Meta:
 		app_label = "api"
 		db_table = "country"
+
+	def __str__(self):
+		"""
+		Returns the country name as a string
+		Returns:
+			str: country name
+		"""
+		return self.country
