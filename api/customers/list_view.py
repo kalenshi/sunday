@@ -1,7 +1,7 @@
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -12,9 +12,9 @@ from api.permissions import IsAdminOrReadOnly
 from api.utils.pagination import CustomerPaginator
 
 
-class CustomersList(APIView):
+class CustomersListView(APIView):
 	authentication_classes = (TokenAuthentication,)
-	permission_classes = (IsAuthenticated,)
+	permission_classes = (IsAuthenticatedOrReadOnly, IsAdminOrReadOnly,)
 	serializer_class = CustomerSerializer
 	pagination_class = CustomerPaginator
 

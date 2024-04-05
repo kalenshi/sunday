@@ -1,9 +1,10 @@
+import factory
 from django.contrib.auth import get_user_model
 from rest_framework.test import APITestCase, APIRequestFactory, force_authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework import status
 
-from api.customers.list_view import CustomersList, CustomerPaginator
+from api.customers.list_view import CustomersListView, CustomerPaginator
 from api.models import Customer
 from tests.factories import StoreFactory, AddressFactory
 from tests.factories.customer_factory import CustomerFactory
@@ -11,7 +12,7 @@ from tests.factories.customer_factory import CustomerFactory
 
 class CustomerListViewTest(APITestCase):
 	def setUp(self):
-		self.view = CustomersList.as_view()
+		self.view = CustomersListView.as_view()
 		self.factory = APIRequestFactory()
 		self.store = StoreFactory()
 		self.address = AddressFactory()
@@ -35,6 +36,25 @@ class CustomerListViewTest(APITestCase):
 		response = self.view(request)
 
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+	def test_paginated_list_view_with_filter_by_email(self):
+		"""
+		Test we can filter results by email
+		"""
+
+		_ = CustomerFactory.create_batch(size=10)
+		_ = CustomerFactory.create(
+			first_name="Kalenshi",
+			last_name="Katebe",
+			email="search@email.com"
+		)
+
+		request = self.factory.get("/customers/?email=search@email.com")
+		force_authenticate(request, user=self, token=self.token.key)
+		response = self.view(request)
+
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertEqual(response.data["count"], 1)
 
 	def test_posting_a_new_customer_only_works_with_authenticated_users(self):
 		"""Test you can create a customer"""
