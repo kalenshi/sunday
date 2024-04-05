@@ -22,6 +22,8 @@ services:
   app:
     build:
       context: .
+      args:
+        - DEV=true
     container_name: sunday-api
 
     volumes:

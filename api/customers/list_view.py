@@ -1,6 +1,7 @@
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -12,7 +13,8 @@ from api.utils.pagination import CustomerPaginator
 
 
 class CustomersList(APIView):
-	permission_classes = [IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated,)
 	serializer_class = CustomerSerializer
 	pagination_class = CustomerPaginator
 
@@ -28,6 +30,12 @@ class CustomersList(APIView):
 			openapi.Parameter(
 				name="last_name",
 				description="Customer Last Name to filter on",
+				in_=openapi.IN_QUERY,
+				type=openapi.TYPE_STRING,
+				required=False
+			), openapi.Parameter(
+				name="email",
+				description="Customer Email to filter on",
 				in_=openapi.IN_QUERY,
 				type=openapi.TYPE_STRING,
 				required=False
@@ -52,6 +60,7 @@ class CustomersList(APIView):
 				filters["customer_first_name__icontains"] = request.query_params.get("first_name")
 				filters["customer_first_name__icontains"] = request.query_params.get("last_name")
 				filters["active"] = request.query_params.get("active")
+				filters["email__icontains"] = request.query_params.get("email")
 
 				if filters["active"] is not None:
 					filters["active"] = bool(int(filters.get("active")))

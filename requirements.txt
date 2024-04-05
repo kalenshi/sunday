@@ -14,7 +14,6 @@ drf-yasg==1.21.7
 exceptiongroup==1.2.0
 factory-boy==3.3.0
 Faker==24.3.0
-flake8==7.0.0
 greenlet==3.0.3
 inflection==0.5.1
 iniconfig==2.0.0

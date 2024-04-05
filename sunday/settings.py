@@ -39,7 +39,6 @@ INSTALLED_APPS = [
 	'django.contrib.staticfiles',
 	"rest_framework",
 	"rest_framework.authtoken",
-	'rest_framework_simplejwt',
 	"drf_yasg",
 	"django_redis",
 	"api",
@@ -154,10 +153,24 @@ REST_FRAMEWORK = {
 	"DEFAULT_PAGINATION_CLASS": "api.utils.pagination.BasePagination",
 	"PAGE_SIZE": 100,
 	"DEFAULT_AUTHENTICATION_CLASSES": (
-		"rest_framework_simplejwt.authentication.JWTAuthentication",
+		"rest_framework.authentication.TokenAuthentication",
+		"rest_framework.authentication.SessionAuthentication",
 	),
+	"DEFAULT_PERMISSION_CLASSES": (
+		"rest_framework.permissions.IsAuthenticated",
+	)
 }
 
+SWAGGER_SETTINGS = {
+	"USE_SESSION_AUTH": False,
+	"SECURITY_DEFINITIONS": {
+		"Bearer": {
+			"type": "apiKey",
+			"name": "Authorization",
+			"in": "header"
+		}
+	}
+}
 # EMAIL_HOST = config('EMAIL_HOST', default='localhost')
 # EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
 # EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')

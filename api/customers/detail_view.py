@@ -1,7 +1,9 @@
+from django.utils.translation import gettext_lazy as _
 from django.shortcuts import get_object_or_404
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import status
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -11,7 +13,8 @@ from api.models import Customer
 
 
 class CustomerDetailView(APIView):
-	# permission_classes = [IsAuthenticatedOrReadOnly]
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (IsAuthenticated,)
 	serializer_class = CustomerSerializer
 
 	@staticmethod
@@ -28,9 +31,9 @@ class CustomerDetailView(APIView):
 	)
 	def delete(self, request, customer_id=None):
 		customer = self.get_object(customer_id)
-		serializer = self.serializer_class(instance=customer)
 		customer.active = False
 		customer.save()
+		serializer = self.serializer_class(instance=customer)
 		return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
 
 	@swagger_auto_schema(
@@ -38,6 +41,8 @@ class CustomerDetailView(APIView):
 		request_body=openapi.Schema(
 			type=openapi.TYPE_OBJECT,
 			properties={
+				"first_name": openapi.Schema(type=openapi.TYPE_STRING),
+				"last_name": openapi.Schema(type=openapi.TYPE_STRING),
 				"email": openapi.Schema(type=openapi.TYPE_STRING),
 				"active": openapi.Schema(type=openapi.TYPE_NUMBER, enum=[0, 1])
 			}
@@ -50,6 +55,16 @@ class CustomerDetailView(APIView):
 	)
 	def patch(self, request, customer_id=None):
 		customer = self.get_object(customer_id)
+		if email := request.data.get("email"):
+			try:
+				customer = Customer.objects.get(email=email)
+			except Customer.DoesNotExist:
+				pass
+			else:
+				return Response(
+					{"result": _("Email already exists")},
+					status=status.HTTP_400_BAD_REQUEST
+				)
 		serializer = self.serializer_class(
 			instance=customer, data=request.data, partial=True
 		)
