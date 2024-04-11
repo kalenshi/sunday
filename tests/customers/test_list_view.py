@@ -1,5 +1,6 @@
 import factory
 from django.contrib.auth import get_user_model
+from django.test import RequestFactory
 from rest_framework.test import APITestCase, APIRequestFactory, force_authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework import status
@@ -71,3 +72,33 @@ class CustomerListViewTest(APITestCase):
 		response = self.view(request)
 
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+	def test_posting_customer_with_invalid_data_returns_bad_request(self):
+		"""Test creating a customer works"""
+		self.payload["address"] = 10  # a non existent address
+		request = self.factory.post('/customers/', data=self.payload)
+		force_authenticate(request, user=self.user, token=self.token)
+		response = self.view(request)
+
+		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+	def test_active_filter_works(self):
+		"""
+		Test that  either one or zer,(True or false) can be passed to active filter
+		"""
+
+		_ = CustomerFactory.create(first_name="Kalenshi", last_name="Katebe", active=False)
+		_ = CustomerFactory.create_batch(size=3, active=True)
+
+		request = self.factory.get('/customers/?active=1')
+		force_authenticate(request, user=self.user, token=self.token)
+		response = self.view(request)
+
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertEqual(3, response.data["count"])
+
+	def test_wrong_active_filter_value_raises_exception(self):
+		"""
+		Test only valid booleans are accepted when active filter is used
+		"""
+		pass
