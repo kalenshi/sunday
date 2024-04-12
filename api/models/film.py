@@ -13,7 +13,7 @@ class Film(models.Model):
 		blank=True,
 		null=True
 	)
-	rental_duration = models.PositiveIntegerField()
+	rental_duration = models.PositiveIntegerField(blank=True, null=True)
 	rental_rate = models.DecimalField(max_digits=4, decimal_places=2)
 	length = models.PositiveSmallIntegerField(blank=True, null=True)
 	replacement_cost = models.DecimalField(max_digits=5, decimal_places=2)

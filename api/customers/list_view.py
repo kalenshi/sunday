@@ -1,7 +1,7 @@
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -12,9 +12,9 @@ from api.permissions import IsAdminOrReadOnly
 from api.utils.pagination import CustomerPaginator
 
 
-class CustomersList(APIView):
+class CustomersListView(APIView):
 	authentication_classes = (TokenAuthentication,)
-	permission_classes = (IsAuthenticated,)
+	permission_classes = (IsAuthenticatedOrReadOnly, IsAdminOrReadOnly,)
 	serializer_class = CustomerSerializer
 	pagination_class = CustomerPaginator
 
@@ -60,7 +60,8 @@ class CustomersList(APIView):
 				filters["first_name__icontains"] = request.query_params.get("first_name")
 				filters["last_name__icontains"] = request.query_params.get("last_name")
 				filters["active"] = request.query_params.get("active")
-				filters["email__icontains"] = request.query_params.get("email")
+				filters["email__icontains"] = request.query_params.get(
+					"email")  # TODO fix email validation
 
 				if filters["active"] is not None:
 					filters["active"] = bool(int(filters.get("active")))
@@ -69,7 +70,7 @@ class CustomersList(APIView):
 				}
 			except ValueError as e:
 				return Response(
-					{"error": f"{str(e)}"}, status=status.HTTP_404_NOT_FOUND
+					{"error": f"{str(e)}"}, status=status.HTTP_400_BAD_REQUEST
 				)
 		if filters:
 

@@ -15,7 +15,7 @@ from api.payment.serializer import PaymentSerializer
 from api.utils.pagination import PaymentPaginator
 
 
-class PaymentList(APIView):
+class PaymentListView(APIView):
 	permission_classes = [IsAuthenticatedOrReadOnly, ]
 	serializer_class = PaymentSerializer
 	pagination_class = PaymentPaginator
