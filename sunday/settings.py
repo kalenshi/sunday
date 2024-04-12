@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+import logging
 import sys
 from pathlib import Path
 
@@ -171,6 +172,45 @@ SWAGGER_SETTINGS = {
 		}
 	}
 }
+
+LOGGING = {
+	"version": 1,
+	"disable_existing_loggers": False,
+	"handlers": {
+		"console": {
+			"level": 'DEBUG',
+			'class': 'logging.StreamHandler',
+		},
+		"file": {
+			"level": "DEBUG",
+			"class": "logging.FileHandler",
+			"filename": 'logs/sunday.log',
+		},
+	},
+	"loggers": {
+		# "django": {
+		# 	"handlers": ["console", "file"],
+		# 	"level": "DEBUG",
+		# 	"propagate": True,
+		# },
+		"django.request": {
+			"handlers": ["console", "file"],
+			"level": "DEBUG",
+			"propagate": False,
+		},
+		"api": {
+			"handlers": ["console", "file"],
+			"level": "DEBUG",
+			"propagate": False,
+		},
+		"users": {
+			"handlers": ["console", "file"],
+			"level": "DEBUG",
+			"propagate": False,
+		},
+	},
+}
+
 # EMAIL_HOST = config('EMAIL_HOST', default='localhost')
 # EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
 # EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
@@ -180,4 +220,4 @@ SWAGGER_SETTINGS = {
 # SERVER_EMAIL = EMAIL_HOST_USER
 # EMAIL_SUBJECT_PREFIX = 'bing'
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = "users.User"

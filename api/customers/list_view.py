@@ -57,8 +57,8 @@ class CustomersList(APIView):
 		req_params = request.query_params
 		if req_params:
 			try:
-				filters["customer_first_name__icontains"] = request.query_params.get("first_name")
-				filters["customer_first_name__icontains"] = request.query_params.get("last_name")
+				filters["first_name__icontains"] = request.query_params.get("first_name")
+				filters["last_name__icontains"] = request.query_params.get("last_name")
 				filters["active"] = request.query_params.get("active")
 				filters["email__icontains"] = request.query_params.get("email")
 
