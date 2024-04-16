@@ -80,7 +80,7 @@ class PaymentListView(APIView):
 				}
 			except ValueError as e:
 				return Response(
-					{"error": f"{str(e)}"}, status=status.HTTP_404_NOT_FOUND
+					{"error": f"{str(e)}"}, status=status.HTTP_400_BAD_REQUEST
 				)
 		paginator = self.pagination_class()
 		if filters:
@@ -94,7 +94,7 @@ class PaymentListView(APIView):
 		# At this point the query has not yet hit the database
 		query_string = f"payment:{json.dumps(filters)}"
 		# check the cache
-		if cache.get(query_string, ):
+		if cache.get(query_string):
 			result = paginator.paginate_queryset(cache.get(query_string, ), request)
 		else:
 			result = paginator.paginate_queryset(payments, request)

@@ -26,3 +26,11 @@ class PaymentListViewTest(APITestCase):
 
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 		self.assertEqual(response.data["count"], 100)
+
+	def test_wrong_payment_date_format(self):
+		"""Test filtering on bad date format cause 400 response"""
+		request = self.factory.get('/payments/?payment_date=2019/02/01')
+		force_authenticate(request, user=self.user, token=self.token.key)
+		response = self.view(request)
+
+		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

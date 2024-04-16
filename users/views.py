@@ -23,7 +23,7 @@ class CreateUserView(APIView):
 		"""Create a new user in the system"""
 		serializer = self.serializer_class(data=request.data)
 		if serializer.is_valid():
-			user = serializer.save()
+			serializer.save()
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		else:
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

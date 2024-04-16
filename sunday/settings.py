@@ -104,8 +104,11 @@ DATABASES = {
 
 CACHES = {
 	"default": {
-		"BACKEND": "django.core.cache.backends.redis.RedisCache",
-		"LOCATION": "redis://sunday-caching:6379/1",
+		"BACKEND": "django_redis.cache.RedisCache",
+		"LOCATION": ["redis://rdCache:6379/1", ],
+		"OPTIONS": {
+			"CLIENT_CLASS": "django_redis.client.DefaultClient",
+		},
 	}
 }
 
