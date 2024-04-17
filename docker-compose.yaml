@@ -56,7 +56,7 @@ services:
     networks:
       - sundayNet
     environment:
-      - LOG_LEVEL=info
+      - LOG_LEVEL=debug
 volumes:
   dbData:
   cacheData:
