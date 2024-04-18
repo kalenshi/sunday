@@ -8,5 +8,8 @@ app_name = 'api'
 urlpatterns = [
 	path('payments/', PaymentListView.as_view(), name="payment-list"),
 	path('customers/', CustomersListView.as_view(), name="customers-list"),
-	path('customers/<int:customer_id>/', CustomerDetailView.as_view(), name="customer-details"),
+	path(
+		'customers/<int:customer_id>/',
+		CustomerDetailView.as_view(), name="customer-details"
+	),
 ]

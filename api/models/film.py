@@ -5,7 +5,7 @@ class Film(models.Model):
 	film_id = models.SmallAutoField(primary_key=True)
 	title = models.CharField(max_length=128)
 	description = models.TextField(blank=True, null=True)
-	release_year = models.TextField(blank=True, null=True)  # This field type is a guess.
+	release_year = models.TextField(blank=True, null=True)
 	language = models.ForeignKey("Language", models.DO_NOTHING)
 	original_language = models.ForeignKey(
 		"Language", models.DO_NOTHING,

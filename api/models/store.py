@@ -7,7 +7,9 @@ class Store(models.Model):
 		"Staff", models.DO_NOTHING,
 		related_name="manages"
 	)
-	address = models.ForeignKey("Address", models.DO_NOTHING, related_name="stores")
+	address = models.ForeignKey(
+		"Address", models.DO_NOTHING, related_name="stores"
+	)
 	last_update = models.DateTimeField()
 
 	class Meta:

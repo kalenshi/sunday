@@ -7,8 +7,12 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UserSerializer(serializers.ModelSerializer):
-	password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
-	password1 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+	password = serializers.CharField(
+		style={"input_type": "password"}, write_only=True
+	)
+	password1 = serializers.CharField(
+		style={"input_type": "password"}, write_only=True
+	)
 
 	class Meta:
 		model = get_user_model()
@@ -36,7 +40,9 @@ class UserSerializer(serializers.ModelSerializer):
 		password = attrs.get("password")
 		password1 = attrs.get("password1")
 		if password != password1:
-			raise serializers.ValidationError(_("Passwords don't match"), code="password_mismatch")
+			raise serializers.ValidationError(
+				_("Passwords don't match"), code="password_mismatch"
+			)
 		return attrs
 
 	def create(self, validated_data):
@@ -72,5 +78,5 @@ class TokenSerializer(serializers.Serializer):
 		if not user:
 			msg = _("Unable to Authenticate with provided credentials")
 			raise serializers.ValidationError(msg, code="authentication")
-		attrs['user'] = user
+		attrs["user"] = user
 		return attrs

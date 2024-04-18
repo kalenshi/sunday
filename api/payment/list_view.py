@@ -94,7 +94,11 @@ class PaymentListView(APIView):
 			).all().order_by("payment_id")
 		# At this point the query has not yet hit the database
 
-		query_string = f"payment:{json.dumps(filters, indent=4, sort_keys=True, cls=DjangoJSONEncoder)}"
+		query_string = f"""
+		payment:{
+		json.dumps(filters, indent=4, sort_keys=True, cls=DjangoJSONEncoder)
+		}
+		"""
 
 		# check the cache
 		if cache.get(query_string):

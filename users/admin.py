@@ -49,7 +49,13 @@ class UserChangeForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields = [
-			"email", "password", "first_name", "last_name", "company", "is_active", "is_superuser"
+			"email",
+			"password",
+			"first_name",
+			"last_name",
+			"company",
+			"is_active",
+			"is_superuser"
 		]
 
 
@@ -75,7 +81,14 @@ class UserAdmin(BaseUserAdmin):
 			None,
 			{
 				"classes": ["wide"],
-				"fields": ["email", "first_name", "last_name", "company", "password1", "password2"],
+				"fields": [
+					"email",
+					"first_name",
+					"last_name",
+					"company",
+					"password1",
+					"password2"
+				],
 			},
 		),
 	]

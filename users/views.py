@@ -17,7 +17,10 @@ class CreateUserView(APIView):
 
 	@swagger_auto_schema(
 		request_body=UserSerializer,
-		responses={"201": UserSerializer, "400": openapi.Response("UserSerializer.errors")}
+		responses={
+			"201": UserSerializer,
+			"400": openapi.Response("UserSerializer.errors")
+		}
 	)
 	def post(self, request):
 		"""Create a new user in the system"""
