@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 
 from django.core.cache import cache
+from django.core.serializers.json import DjangoJSONEncoder
 from drf_yasg import openapi
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -80,7 +81,7 @@ class PaymentListView(APIView):
 				}
 			except ValueError as e:
 				return Response(
-					{"error": f"{str(e)}"}, status=status.HTTP_404_NOT_FOUND
+					{"error": f"{str(e)}"}, status=status.HTTP_400_BAD_REQUEST
 				)
 		paginator = self.pagination_class()
 		if filters:
@@ -92,9 +93,15 @@ class PaymentListView(APIView):
 				"customer", "staff", "rental"
 			).all().order_by("payment_id")
 		# At this point the query has not yet hit the database
-		query_string = f"payment:{json.dumps(filters)}"
+
+		query_string = f"""
+		payment:{
+		json.dumps(filters, indent=4, sort_keys=True, cls=DjangoJSONEncoder)
+		}
+		"""
+
 		# check the cache
-		if cache.get(query_string, ):
+		if cache.get(query_string):
 			result = paginator.paginate_queryset(cache.get(query_string, ), request)
 		else:
 			result = paginator.paginate_queryset(payments, request)

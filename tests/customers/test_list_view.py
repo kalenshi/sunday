@@ -101,4 +101,8 @@ class CustomerListViewTest(APITestCase):
 		"""
 		Test only valid booleans are accepted when active filter is used
 		"""
-		pass
+		request = self.factory.get('/customers/?active=true')
+		force_authenticate(request, user=self.user, token=self.token)
+		response = self.view(request)
+
+		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

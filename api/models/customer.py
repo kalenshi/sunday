@@ -7,7 +7,9 @@ class Customer(models.Model):
 	first_name = models.CharField(max_length=45)
 	last_name = models.CharField(max_length=45)
 	email = models.CharField(max_length=50, blank=True, null=True)
-	address = models.ForeignKey("Address", models.DO_NOTHING, related_name="customers")
+	address = models.ForeignKey(
+		"Address", models.DO_NOTHING, related_name="customers"
+	)
 	active = models.BooleanField(default=True)
 	create_date = models.DateTimeField(auto_now_add=True)
 	last_update = models.DateTimeField(null=True, blank=True)

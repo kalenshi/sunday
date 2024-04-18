@@ -23,8 +23,7 @@ from drf_yasg.views import get_schema_view
 
 schema_view = get_schema_view(
 	openapi.Info(
-		title="Sunday",
-		default_version='v1',
+		title="Sunday", default_version='v1',
 		description="Sundays Iteration of Payment API",
 		contact=openapi.Contact("kalenshi@gmail.com")
 	),
@@ -35,7 +34,10 @@ schema_view = get_schema_view(
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
-	path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+	path(
+		'',
+		schema_view.with_ui('swagger', cache_timeout=0),
+		name="schema-swagger-ui"),
 	path('api/', include('api.urls')),
 	path('users/', include('users.urls')),
 ]

@@ -1,7 +1,7 @@
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -48,7 +48,10 @@ class CustomersListView(APIView):
 				required=False
 			),
 		],
-		responses={"200": CustomerSerializer, "400": openapi.Response("CustomerSerializer.errors")}
+		responses={
+			"200": CustomerSerializer,
+			"400": openapi.Response("CustomerSerializer.errors")
+		}
 	)
 	def get(self, request, format=None):
 		paginator = self.pagination_class()

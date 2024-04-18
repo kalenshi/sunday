@@ -6,4 +6,5 @@ omit=
     */staticfiles/*
     */__init__.py/*
     manage.py
+    settings.py
     admin.py

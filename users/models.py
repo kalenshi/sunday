@@ -1,9 +1,17 @@
 from django.db import models
-from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin, BaseUserManager)
+from django.contrib.auth.models import (
+	AbstractBaseUser, PermissionsMixin, BaseUserManager
+)
 
 
 class UserManager(BaseUserManager):
-	def create_user(self, email, first_name=None, last_name=None, password=None, **extra_fields):
+	def create_user(
+		self,
+		email,
+		first_name=None,
+		last_name=None,
+		password=None,
+		**extra_fields):
 		"""
 		Creates and saves a user with the given email and password
 		Args:
@@ -30,8 +38,12 @@ class UserManager(BaseUserManager):
 		return user
 
 	def create_superuser(
-			self, email, first_name=None, last_name=None, password=None, **extra_fields
-	):
+		self,
+		email,
+		first_name=None,
+		last_name=None,
+		password=None,
+		**extra_fields):
 		"""
 
 		Args:
@@ -63,8 +75,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 	"""
 	Custom user Model which supports using email instead of username
 	"""
-	first_name = models.CharField(max_length=100, verbose_name="First Name", null=True, blank=True)
-	last_name = models.CharField(max_length=100, verbose_name="Last Name", null=True, blank=True)
+	first_name = models.CharField(
+		max_length=100, verbose_name="First Name", null=True, blank=True
+	)
+	last_name = models.CharField(
+		max_length=100, verbose_name="Last Name", null=True, blank=True
+	)
 	email = models.EmailField(max_length=255, unique=True, verbose_name="Email")
 	company = models.CharField(max_length=255, verbose_name="Organization")
 
@@ -80,7 +96,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 	def __str__(self):
 		"""String representation of the user model"""
-		return f" {self.email}"
+		return f"{self.email}"
 
 	class Meta:
 		app_label = "users"
