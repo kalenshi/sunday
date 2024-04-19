@@ -90,7 +90,7 @@ class CustomerListViewTest(APITestCase):
 		_ = CustomerFactory.create(first_name="Kalenshi", last_name="Katebe", active=False)
 		_ = CustomerFactory.create_batch(size=3, active=True)
 
-		request = self.factory.get('/customers/?active=1')
+		request = self.factory.get("/customers/?active=1")
 		force_authenticate(request, user=self.user, token=self.token)
 		response = self.view(request)
 
@@ -101,7 +101,7 @@ class CustomerListViewTest(APITestCase):
 		"""
 		Test only valid booleans are accepted when active filter is used
 		"""
-		request = self.factory.get('/customers/?active=true')
+		request = self.factory.get("/customers/?active=true")
 		force_authenticate(request, user=self.user, token=self.token)
 		response = self.view(request)
 

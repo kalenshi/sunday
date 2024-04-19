@@ -25,8 +25,10 @@ class PaymentListViewTest(APITestCase):
 		)
 		self.token = Token.objects.create(user=self.user)
 
-	def test_get_lists_all_paginated_responses(self):
+	@patch("api.payment.list_view.cache")
+	def test_get_lists_all_paginated_responses(self, cache):
 		_ = PaymentFactory.create_batch(size=100)
+		cache.get.return_value = None
 		request = self.factory.get('/payments/')
 		force_authenticate(request, user=self.user, token=self.token.key)
 		response = self.view(request)
@@ -39,12 +41,12 @@ class PaymentListViewTest(APITestCase):
 		request = self.factory.get('/payments/?payment_date=2019/02/01')
 		force_authenticate(request, user=self.user, token=self.token.key)
 		response = self.view(request)
-
 		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-	@patch("api.models.Payment.objects.select_related")
 	@patch("api.payment.list_view.json")
-	def test_list_view_filters(self, json_patch, related_patch):
+	@patch("api.payment.list_view.cache")
+	@patch("api.models.Payment.objects.select_related")
+	def test_list_view_filters(self, related_patch, cache, json_patch):
 		"""Test filtering on payment date format cause 200 response"""
 		payments = PaymentFactory.create_batch(
 			size=10,
@@ -58,7 +60,7 @@ class PaymentListViewTest(APITestCase):
 				payment_date=datetime.datetime(2019, 11, 1, tzinfo=timezone.utc)
 			)
 		)
-
+		cache.get.return_value = None
 		related_patch.return_value = Payment.objects.all()
 		json_patch.dumps.return_value = {"count": len(payments)}
 		request = self.factory.get("/payments/?payment_date=2019-11-1")
