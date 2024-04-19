@@ -14,6 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Change file Permission
-        run: chomd +x ./run_tests.sh
+        run: chmod +x ./run_tests.sh
       - name: Test
         run: ./run_tests.sh
