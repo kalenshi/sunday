@@ -8,6 +8,5 @@ if [[ $? -ne 0 ]]; then
 fi
 
 coverage report -m
-flake8 --ignore=W191
 
 exit $result
