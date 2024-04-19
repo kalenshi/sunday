@@ -14,6 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Test
-        run: docker compose run --rm app bash -c "./run_tests.sh"
+        run: ./run_tests.sh
       - name: Lint
-        run: docker compose run --rm app bash -c "flake8 --ignore=W191,E101,E126"
+        run: flake8 --ignore=W191,E101,E126
