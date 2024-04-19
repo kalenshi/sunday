@@ -13,7 +13,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Change file Permission
+        run: chomd +x ./run_tests.sh
       - name: Test
-        run: ls -la
-      - name: Lint
-        run: flake8 --ignore=W191,E101,E126
+        run: ./run_tests.sh
